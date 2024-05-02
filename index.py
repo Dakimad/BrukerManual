@@ -1,6 +1,6 @@
+import tkinter 
 import pymysql.cursors
 import random
-
 # Oppretter en tilkobling til databasen
 connection = pymysql.connect(host='172.20.128.84', 
                             user='Daniel',         
@@ -31,4 +31,24 @@ def insert_user(username, bruker_id, passord):
     with connection.cursor() as cursor:
         cursor.execute("INSERT INTO Brukere (Navn, BrukerID, Passord) VALUES (%s, %s, %s)", (username, bruker_id, passord))
     connection.commit()
-    
+
+
+
+def main():
+    # Ber brukeren om å skrive inn et brukernavn
+    print("Skriv inn et brukernavn:")
+    username = input()
+    print("skriv inn passord")
+    passord = input()
+    # Genererer et unikt brukerID
+    bruker_id = generate_unique_number()
+    # Setter inn brukernavn og brukerID i databasen
+    insert_user(username, bruker_id, passord)
+    # Skriver ut bekreftelse på at brukeren er lagt til i databasen
+    print("Bruker lagt til i databasen med brukernavn:", username, ", BrukerID:", bruker_id, "og Passord", passord)
+
+    # Genererer et tilfeldig tall og setter det inn i databasen
+
+if __name__ == "__main__":
+    main()
+
