@@ -34,11 +34,33 @@ def insert_user(username, bruker_id, passord):
 
 
 
+def check_duplicate_user(username):
+    # Sjekker om brukernavnet allerede eksisterer i databasen
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT COUNT(*) AS count FROM Brukere WHERE Navn = %s", (username,))
+        result = cursor.fetchone()
+        if result['count'] > 0:
+            return True
+        else:
+            return False
+
+def insert_user(username, bruker_id, passord):
+    # Setter inn brukernavn, brukerID og passord i databasen
+    with connection.cursor() as cursor:
+        cursor.execute("INSERT INTO Brukere (Navn, BrukerID, Passord) VALUES (%s, %s, %s)", (username, bruker_id, passord))
+    connection.commit()
+
 def main():
     # Ber brukeren om å skrive inn et brukernavn
     print("Skriv inn et brukernavn:")
     username = input()
-    print("skriv inn passord")
+    
+    # Sjekker om brukernavnet allerede er brukt
+    if check_duplicate_user(username):
+        print("Brukernavnet er allerede brukt. Velg et annet brukernavn.")
+        return
+    
+    print("Skriv inn passord:")
     passord = input()
     # Genererer et unikt brukerID
     bruker_id = generate_unique_number()
@@ -47,7 +69,7 @@ def main():
     # Skriver ut bekreftelse på at brukeren er lagt til i databasen
     print("Bruker lagt til i databasen med brukernavn:", username, ", BrukerID:", bruker_id, "og Passord", passord)
 
-    # Genererer et tilfeldig tall og setter det inn i databasen
+
 
 if __name__ == "__main__":
     main()
